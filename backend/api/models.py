@@ -4,7 +4,7 @@ from django.db import models
 
 class Course(models.Model):
   dept = models.CharField(max_length=10)
-  number = models.PositiveSmallIntegerField()
+  number = models.CharField(max_length=50)
   title = models.CharField(max_length=100)
 
   class Meta:
