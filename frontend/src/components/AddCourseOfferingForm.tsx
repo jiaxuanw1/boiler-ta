@@ -15,7 +15,7 @@ interface AddOfferingFormProps {
 
 const AddCourseOfferingForm = ({ show, courses, onClose, onAddOffering }: AddOfferingFormProps) => {
   const date = new Date();
-  let currentSem : "Spring" | "Summer" | "Fall" | "Winter";
+  let currentSem: "Spring" | "Summer" | "Fall" | "Winter";
   if (date.getMonth() < 4) {
     currentSem = "Spring";
   } else if (date.getMonth() < 8) {
