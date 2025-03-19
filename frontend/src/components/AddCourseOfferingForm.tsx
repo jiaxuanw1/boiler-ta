@@ -9,11 +9,11 @@ import { Course, CourseOffering, FormControlElement } from '../types';
 interface AddOfferingFormProps {
   show: boolean;
   courses: Course[];
-  handleClose: () => void;
-  handleAddOffering: (offering: CourseOffering) => void;
+  onClose: () => void;
+  onAddOffering: (offering: CourseOffering) => void;
 }
 
-const AddCourseOfferingForm = ({ show, courses, handleClose, handleAddOffering }: AddOfferingFormProps) => {
+const AddCourseOfferingForm = ({ show, courses, onClose, onAddOffering }: AddOfferingFormProps) => {
   const date = new Date();
   let currentSem : "Spring" | "Summer" | "Fall" | "Winter";
   if (date.getMonth() < 4) {
@@ -45,7 +45,7 @@ const AddCourseOfferingForm = ({ show, courses, handleClose, handleAddOffering }
   return (
     <Modal
       show={show}
-      onHide={handleClose}
+      onHide={onClose}
       backdrop="static"
     >
       <Modal.Header closeButton>
@@ -56,7 +56,6 @@ const AddCourseOfferingForm = ({ show, courses, handleClose, handleAddOffering }
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>Course</Form.Label>
-            {/* <Form.Control name="title" type="text" value={course.title} onChange={handleChange} /> */}
             <Form.Select name="course" value={offering.course} onChange={handleChange}>
               <option value={`-1`}></option>
               {courses.map(course => (
@@ -86,10 +85,10 @@ const AddCourseOfferingForm = ({ show, courses, handleClose, handleAddOffering }
       </Modal.Body>
 
       <Modal.Footer>
-        <Button className="mx-2" variant="primary" onClick={() => handleAddOffering(offering)}>
+        <Button className="mx-2" variant="primary" onClick={() => onAddOffering(offering)}>
           Add Course Offering
         </Button>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={onClose}>
           Cancel
         </Button>
       </Modal.Footer>

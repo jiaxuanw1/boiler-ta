@@ -8,11 +8,11 @@ import { Course, FormControlElement } from '../types';
 
 interface CreateCourseFormProps {
   show: boolean;
-  handleClose: () => void;
-  handleCreateCourse: (course: Course) => void;
+  onClose: () => void;
+  onCreateCourse: (course: Course) => void;
 }
 
-const CreateCourseForm = ({ show, handleClose, handleCreateCourse }: CreateCourseFormProps) => {
+const CreateCourseForm = ({ show, onClose, onCreateCourse }: CreateCourseFormProps) => {
   const [course, setCourse] = useState<Course>({
     id: -1, // id doesn't matter since it won't be used during creation
     dept: "",
@@ -31,7 +31,7 @@ const CreateCourseForm = ({ show, handleClose, handleCreateCourse }: CreateCours
   return (
     <Modal
       show={show}
-      onHide={handleClose}
+      onHide={onClose}
       backdrop="static"
     >
       <Modal.Header closeButton>
@@ -59,10 +59,10 @@ const CreateCourseForm = ({ show, handleClose, handleCreateCourse }: CreateCours
       </Modal.Body>
 
       <Modal.Footer>
-        <Button className="mx-2" variant="primary" onClick={() => handleCreateCourse(course)}>
+        <Button className="mx-2" variant="primary" onClick={() => onCreateCourse(course)}>
           Create Course
         </Button>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={onClose}>
           Cancel
         </Button>
       </Modal.Footer>

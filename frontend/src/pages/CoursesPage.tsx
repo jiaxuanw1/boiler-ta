@@ -3,40 +3,68 @@ import axios from 'axios';
 import { API_BASE_URL } from '../api';
 import { Course, CourseOffering } from "../types";
 import Button from 'react-bootstrap/Button';
-import CreateCourseForm from './CreateCourseForm';
-import AddCourseOfferingForm from './AddCourseOfferingForm';
+import CreateCourseForm from '../components/CreateCourseForm';
+import AddCourseOfferingForm from '../components/AddCourseOfferingForm';
+import CourseListing from '../components/CourseListing';
 
-const CourseOfferingsList = () => {
+const CoursesPage = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [offeringsByCourse, setOfferingsByCourse] = useState<{ [key: number]: CourseOffering[] }>({});
+
   // Invoke onDataUpdate() when data is changed to allow course list to refresh
   const [dataUpdateTrigger, setDataUpdateTrigger] = useState(0);
   const onDataUpdate = () => setDataUpdateTrigger(prevValue => prevValue + 1);
 
+
   const [showCreateCourse, setShowCreateCourse] = useState(false);
   const handleShowCreateCourse = () => setShowCreateCourse(true);
   const handleCloseCreateCourse = () => setShowCreateCourse(false);
-  const handleCreateCourse = (course: Course) => {
+  const handleCreateCourse = async (course: Course) => {
     // make POST request
+    console.log(`create course:`);
     console.log(course);
 
     onDataUpdate();
     handleCloseCreateCourse();
   };
 
+  const handleDeleteCourse = async (course_id: number) => {
+    // make DELETE request
+    console.log(`delete coure: ${course_id}`);
+
+    onDataUpdate();
+  };
+
   const [showAddOffering, setShowAddOffering] = useState(false);
   const handleShowAddOffering = () => setShowAddOffering(true);
   const handleCloseAddOffering = () => setShowAddOffering(false);
-  const handleAddOffering = (offering: CourseOffering) => {
+  const handleAddOffering = async (offering: CourseOffering) => {
     // make POST request
+    console.log(`add offering:`);
     console.log(offering);
 
     onDataUpdate();
     handleCloseAddOffering();
   };
 
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [offeringsByCourse, setOfferingsByCourse] = useState<{ [key: number]: CourseOffering[] }>({});
+  const handleUpdateOffering = async (updatedOffering: CourseOffering) => {
+    // make PUT request
+    console.log(`update offering:`);
+    console.log(updatedOffering);
 
-  useEffect(() => {
+    onDataUpdate();
+  };
+
+  const handleDeleteOffering = async (offering_id: number) => {
+    // make DELETE request
+    console.log(`delete offering: ${offering_id}`);
+
+    onDataUpdate();
+  };
+
+
+
+  const fetchCoursesAndOfferings = async () => {
     // Fetch courses and offerings from Django API in parallel
     axios.all([
       axios.get(`${API_BASE_URL}/api/courses/`),
@@ -78,6 +106,10 @@ const CourseOfferingsList = () => {
     .catch(error => {
       console.error("Error fetching courses and/or offerings:", error);
     });
+  };
+
+  useEffect(() => {
+    fetchCoursesAndOfferings();
   }, [dataUpdateTrigger]);
 
 
@@ -89,8 +121,8 @@ const CourseOfferingsList = () => {
       </Button>
       <CreateCourseForm
         show={showCreateCourse}
-        handleClose={handleCloseCreateCourse}
-        handleCreateCourse={handleCreateCourse}
+        onClose={handleCloseCreateCourse}
+        onCreateCourse={handleCreateCourse}
       />
 
       <Button className="m-2" variant="secondary" onClick={handleShowAddOffering}>
@@ -99,23 +131,23 @@ const CourseOfferingsList = () => {
       <AddCourseOfferingForm
         show={showAddOffering}
         courses={courses}
-        handleClose={handleCloseAddOffering}
-        handleAddOffering={handleAddOffering}
+        onClose={handleCloseAddOffering}
+        onAddOffering={handleAddOffering}
       />
+      
       {courses.map(course => (
-        <div key={course.id}>
+        <div key={course.id} className="m-3">
           <h3>{`${course.dept} ${course.number}: ${course.title}`}</h3>
-          <ul>
-            {offeringsByCourse[course.id].map(offering => (
-              <li key={offering.id}>
-                {offering.semester} {offering.year}
-              </li>
-            ))}
-          </ul>
+          <CourseListing
+            course={course}
+            offerings={offeringsByCourse[course.id]} 
+            onOfferingUpdate={handleUpdateOffering}
+            onOfferingDelete={handleDeleteOffering}
+          />
         </div>
       ))}
     </div>
   );
 }
 
-export default CourseOfferingsList;
+export default CoursesPage;
