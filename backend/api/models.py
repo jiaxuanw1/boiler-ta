@@ -59,6 +59,9 @@ class Homework(models.Model):
   hw_name = models.CharField(max_length=50)
   course_offering = models.ForeignKey(CourseOffering, on_delete=models.CASCADE, related_name="homeworks")
 
+  class Meta:
+    unique_together = ("hw_name", "course_offering")
+
   def __str__(self):
     return f"{self.hw_name}, {self.course_offering}"
 
@@ -70,6 +73,9 @@ class Question(models.Model):
   required_tas = models.PositiveSmallIntegerField() # gta + uta + either
   required_gtas = models.PositiveSmallIntegerField(default=0)
   required_utas = models.PositiveSmallIntegerField(default=0)
+
+  class Meta:
+    unique_together = ("hw", "question_name")
 
   def __str__(self):
     return f"{self.hw}, {self.question_name}"
