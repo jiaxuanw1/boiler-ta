@@ -4,20 +4,34 @@ import { API_BASE_URL } from '../api';
 import { Course, CourseOffering } from "../types";
 import Button from 'react-bootstrap/Button';
 import CreateCourseForm from './CreateCourseForm';
+import AddCourseOfferingForm from './AddCourseOfferingForm';
 
 const CourseOfferingsList = () => {
-  const [showCreateCourse, setShowCreateCourse] = useState(false);
-  const [showAddOffering, setShowAddOffering] = useState(false);
+  // Invoke onDataUpdate() when data is changed to allow course list to refresh
+  const [dataUpdateTrigger, setDataUpdateTrigger] = useState(0);
+  const onDataUpdate = () => setDataUpdateTrigger(prevValue => prevValue + 1);
 
+  const [showCreateCourse, setShowCreateCourse] = useState(false);
   const handleShowCreateCourse = () => setShowCreateCourse(true);
-  const handleCancelCreateCourse = () => setShowCreateCourse(false);
+  const handleCloseCreateCourse = () => setShowCreateCourse(false);
   const handleCreateCourse = (course: Course) => {
     // make POST request
     console.log(course);
+
+    onDataUpdate();
+    handleCloseCreateCourse();
   };
 
+  const [showAddOffering, setShowAddOffering] = useState(false);
   const handleShowAddOffering = () => setShowAddOffering(true);
   const handleCloseAddOffering = () => setShowAddOffering(false);
+  const handleAddOffering = (offering: CourseOffering) => {
+    // make POST request
+    console.log(offering);
+
+    onDataUpdate();
+    handleCloseAddOffering();
+  };
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [offeringsByCourse, setOfferingsByCourse] = useState<{ [key: number]: CourseOffering[] }>({});
@@ -64,22 +78,30 @@ const CourseOfferingsList = () => {
     .catch(error => {
       console.error("Error fetching courses and/or offerings:", error);
     });
-  }, []);
+  }, [dataUpdateTrigger]);
 
 
   return (
     <div>
       <h1>Courses</h1>
-      <Button variant="primary" onClick={handleShowCreateCourse}>
+      <Button className="m-2" variant="primary" onClick={handleShowCreateCourse}>
         Create Course
       </Button>
       <CreateCourseForm
         show={showCreateCourse}
-        handleCancel={handleCancelCreateCourse}
+        handleClose={handleCloseCreateCourse}
         handleCreateCourse={handleCreateCourse}
       />
 
-      {/* <Button variant="contained">Add Course Offering</Button> */}
+      <Button className="m-2" variant="secondary" onClick={handleShowAddOffering}>
+        Add Course Offering
+      </Button>
+      <AddCourseOfferingForm
+        show={showAddOffering}
+        courses={courses}
+        handleClose={handleCloseAddOffering}
+        handleAddOffering={handleAddOffering}
+      />
       {courses.map(course => (
         <div key={course.id}>
           <h3>{`${course.dept} ${course.number}: ${course.title}`}</h3>

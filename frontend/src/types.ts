@@ -47,3 +47,6 @@ export interface GradingRel {
   ta: number; // foreign key to TA
   question: number; // foreign key to Question
 }
+
+// For convenience when typing ChangeEvent for different form fields
+export type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
