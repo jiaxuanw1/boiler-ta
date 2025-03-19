@@ -11,7 +11,7 @@ class Course(models.Model):
     unique_together = ("dept", "number")
   
   def __str__(self):
-    return f"{self.name} {self.number}"
+    return f"{self.dept} {self.number}"
 
 
 class CourseOffering(models.Model):

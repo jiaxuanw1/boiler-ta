@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(v^fhu0&u0g-z=k81)*2ilyud%#j=^x8rl$j!udk-@w(y9kyky
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", ]
+ALLOWED_HOSTS = ["127.0.0.1", ]
 
 
 # Application definition
@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
-        'NAME': '',
-        'HOST': '',
+        'NAME': 'boiler_ta',
+        'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'jmoney',
         # 'OPTIONS': {
         #   'autocommit': True,
         #   'use_oure': True,
