@@ -16,7 +16,12 @@ class Course(models.Model):
 
 class CourseOffering(models.Model):
   course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="offerings")
-  semester = models.CharField(max_length=6)
+  semester = models.CharField(max_length=6, choices=(
+    ("Spring", "Spring"),
+    ("Summer", "Summer"),
+    ("Fall", "Fall"),
+    ("Winter", "Winter")
+  ))
   year = models.PositiveSmallIntegerField()
 
   class Meta:
@@ -27,9 +32,9 @@ class CourseOffering(models.Model):
   
 
 class TA(models.Model):
-  username = models.CharField(max_length=100, unique=True)
-  first = models.CharField(max_length=100)
-  last = models.CharField(max_length=100)
+  username = models.CharField(max_length=50, unique=True)
+  first = models.CharField(max_length=50)
+  last = models.CharField(max_length=50)
 
   def __str__(self):
     return self.username
@@ -38,7 +43,10 @@ class TA(models.Model):
 class TACourseRel(models.Model):
   ta = models.ForeignKey(TA, on_delete=models.CASCADE, related_name="ta_course_rels")
   course_offering = models.ForeignKey(CourseOffering, on_delete=models.CASCADE, related_name="ta_course_rels")
-  classification = models.CharField(max_length=2) # UG or GR
+  classification = models.CharField(max_length=2, choices=(
+    ("UG", "Undergraduate"),
+    ("GR", "Graduate")
+  ))
 
   class Meta:
     unique_together = ("ta", "course_offering")
@@ -48,7 +56,7 @@ class TACourseRel(models.Model):
 
 
 class Homework(models.Model):
-  hw_name = models.CharField(max_length=100)
+  hw_name = models.CharField(max_length=50)
   course_offering = models.ForeignKey(CourseOffering, on_delete=models.CASCADE, related_name="homeworks")
 
   def __str__(self):
@@ -57,7 +65,7 @@ class Homework(models.Model):
 
 class Question(models.Model):
   hw = models.ForeignKey(Homework, on_delete=models.CASCADE, related_name="questions")
-  question_name = models.CharField(max_length=100)
+  question_name = models.CharField(max_length=50)
   difficulty = models.PositiveSmallIntegerField()
   required_tas = models.PositiveSmallIntegerField() # gta + uta + either
   required_gtas = models.PositiveSmallIntegerField(default=0)

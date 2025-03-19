@@ -25,6 +25,21 @@ const CourseOfferingsList = () => {
       });
       setCourses(courseList);
 
+      // Sort offerings starting with most recent
+      offeringList.sort((a, b) => {
+        const semesterOrder = {
+          Spring: 1,
+          Summer: 2,
+          Fall: 3,
+          Winter: 4
+        };
+
+        if (a.year != b.year) {
+          return b.year - a.year;
+        }
+        return semesterOrder[b.semester] - semesterOrder[a.semester];
+      });
+
       // Group course offerings by course ID
       const grouped: { [key: number]: CourseOffering[] } = {};
       courseList.forEach(course => grouped[course.id] = []);

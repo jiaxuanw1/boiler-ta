@@ -8,7 +8,7 @@ export interface Course {
 export interface CourseOffering {
   id: number;
   course: number; // foreign key to Course
-  semester: string;
+  semester: "Spring" | "Summer" | "Fall" | "Winter";
   year: number;
 }
 
@@ -23,7 +23,7 @@ export interface TACourseRel {
   id: number;
   ta: number; // foreign key to TA
   course_offering: number; // foreign key to CourseOffering
-  classification: string;
+  classification: "UG" | "GR";
 }
 
 export interface Homework {
