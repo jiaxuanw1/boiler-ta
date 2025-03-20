@@ -9,10 +9,10 @@ interface CreateQuestionFormProps {
   show: boolean;
   homeworkId: number;
   onClose: () => void;
-  onCreateQuestion: (question: Question) => void;
+  onSave: () => void;
 }
 
-const CreateQuestionForm = ({ show, homeworkId, onClose, onCreateQuestion }: CreateQuestionFormProps) => {
+const CreateQuestionForm = ({ show, homeworkId, onClose, onSave }: CreateQuestionFormProps) => {
   const [question, setQuestion] = useState<Question>({
     id: -1, // id doesn't matter since it won't be used during creation
     hw: homeworkId,
@@ -29,7 +29,15 @@ const CreateQuestionForm = ({ show, homeworkId, onClose, onCreateQuestion }: Cre
       ...prevState, // shallow copy entire previous state
       [name]: value // update specific key/value
     }));
-  }
+  };
+
+
+  const handleCreateQuestion = async (question: Question) => {
+    // make POST request
+    console.log("create question:");
+    console.log(question);
+  };
+
 
   return (
     <Modal
@@ -68,8 +76,8 @@ const CreateQuestionForm = ({ show, homeworkId, onClose, onCreateQuestion }: Cre
           className="mx-2" 
           variant="primary" 
           onClick={() => {
-            onCreateQuestion(question);
-            onClose();
+            handleCreateQuestion(question);
+            onSave();
           }}
         >
           Create Question

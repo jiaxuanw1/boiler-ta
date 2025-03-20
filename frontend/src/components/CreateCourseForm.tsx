@@ -9,10 +9,10 @@ import { Course, FormControlElement } from '../types';
 interface CreateCourseFormProps {
   show: boolean;
   onClose: () => void;
-  onCreateCourse: (course: Course) => void;
+  onSave: () => void;
 }
 
-const CreateCourseForm = ({ show, onClose, onCreateCourse }: CreateCourseFormProps) => {
+const CreateCourseForm = ({ show, onClose, onSave }: CreateCourseFormProps) => {
   const [course, setCourse] = useState<Course>({
     id: -1, // id doesn't matter since it won't be used during creation
     dept: "",
@@ -26,7 +26,15 @@ const CreateCourseForm = ({ show, onClose, onCreateCourse }: CreateCourseFormPro
       ...prevState, // shallow copy entire previous state
       [name]: value // update specific key/value
     }));
-  }
+  };
+
+
+  const handleCreateCourse = async (course: Course) => {
+    // make POST request
+    console.log(`create course:`);
+    console.log(course);
+  };
+
 
   return (
     <Modal
@@ -63,8 +71,8 @@ const CreateCourseForm = ({ show, onClose, onCreateCourse }: CreateCourseFormPro
           className="mx-2" 
           variant="primary" 
           onClick={() => {
-            onCreateCourse(course);
-            onClose();
+            handleCreateCourse(course);
+            onSave();
           }}
         >
           Create Course

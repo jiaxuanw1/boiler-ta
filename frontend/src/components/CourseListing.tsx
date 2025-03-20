@@ -5,11 +5,10 @@ import EditCourseOfferingForm from './EditCourseOfferingForm';
 interface CourseListingProps {
   course: Course;
   offerings: CourseOffering[];
-  onOfferingUpdate: (offering: CourseOffering) => void;
-  onOfferingDelete: (id: number) => void;
+  onSaveOffering: () => void;
 }
 
-const CourseListing = ({ course, offerings, onOfferingUpdate, onOfferingDelete }: CourseListingProps) => {
+const CourseListing = ({ course, offerings, onSaveOffering }: CourseListingProps) => {
   return (
     <Accordion>
       {offerings.map(offering => (
@@ -22,8 +21,7 @@ const CourseListing = ({ course, offerings, onOfferingUpdate, onOfferingDelete }
           <Accordion.Body>
             <EditCourseOfferingForm 
               offering={offering}
-              onUpdate={onOfferingUpdate}
-              onDelete={onOfferingDelete}
+              onSave={onSaveOffering}
             />
           </Accordion.Body>
 

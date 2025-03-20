@@ -12,60 +12,16 @@ interface ClassManagementFormProps {
 }
 
 const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => {
-  // Invoke onDataUpdate() when data is changed to allow course list to refresh
+  // Invoke onDataUpdate() when data is changed
   const [dataUpdateTrigger, setDataUpdateTrigger] = useState(0);
   const onDataUpdate = () => setDataUpdateTrigger(prevValue => prevValue + 1);
-
 
   const [showCreateHomework, setShowCreateHomework] = useState(false);
   const handleShowCreateHomework = () => setShowCreateHomework(true);
   const handleCloseCreateHomework = () => setShowCreateHomework(false);
-
-  const handleCreateHomework = async (homework: Homework) => {
-    // make POST request
-    console.log("create homework:");
-    console.log(homework);
-
-    onDataUpdate();
-  };
-
-  const handleUpdateHomework = async (updatedHomework: Homework) => {
-    // make PUT request
-    console.log(`update homework`);
-    console.log(updatedHomework);
-
-    onDataUpdate();
-  };
-
-  const handleDeleteHomework = async (homeworkId: number) => {
-    // make DELETE request
-    console.log(`delete homework: ${homeworkId}`);
-
-    onDataUpdate();
-  };
-
-
-  const handleCreateQuestion = async (question: Question) => {
-    // make POST request
-    console.log("create question:");
-    console.log(question);
-
-    onDataUpdate();
-  };
-
-  const handleUpdateQuestion = async (updatedQuestion: Question) => {
-    // make PUT request
-    console.log(`update question`);
-    console.log(updatedQuestion);
-
-    onDataUpdate();
-  };
-
-  const handleDeleteQuestion = async (questionId: number) => {
-    // make DELETE request
-    console.log(`delete question: ${questionId}`);
-
-    onDataUpdate();
+  const handleSaveHomework = () => {
+    setShowCreateHomework(false);
+    onDataUpdate(); // re-fetch data
   };
 
   
@@ -95,11 +51,12 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
   };
 
   
-  // Re-fetch homeworks and TAs whenever selected course offering changes
+  // Re-fetch homeworks and TAs whenever selected course offering changes or data is updated
   useEffect(() => {
     fetchHomeworks(offering.id);
     fetchTAs(offering.id);
-  }, [offering]);
+    console.log("fetch!");
+  }, [offering, dataUpdateTrigger]);
 
 
   return (
@@ -118,7 +75,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
           show={showCreateHomework}
           courseOfferingId={offering.id}
           onClose={handleCloseCreateHomework}
-          onCreateHomework={handleCreateHomework}
+          onSave={handleSaveHomework}
         />
 
         <Accordion className="m-3">
@@ -126,11 +83,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
             <HomeworkAccordionItem 
               key={`homework-${homework.id}`} 
               homework={homework} 
-              onUpdateHomework={handleUpdateHomework}
-              onDeleteHomework={handleDeleteHomework}
-              onCreateQuestion={handleCreateQuestion}
-              onUpdateQuestion={handleUpdateQuestion}
-              onDeleteQuestion={handleDeleteQuestion}
+              onSaveHomework={handleSaveHomework}
             />
           ))}
         </Accordion>

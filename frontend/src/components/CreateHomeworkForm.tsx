@@ -8,10 +8,10 @@ interface CreateHomeworkFormProps {
   show: boolean;
   courseOfferingId: number;
   onClose: () => void;
-  onCreateHomework: (homework: Homework) => void;
+  onSave: () => void;
 }
 
-const CreateHomeworkForm = ({ show, courseOfferingId, onClose, onCreateHomework }: CreateHomeworkFormProps) => {
+const CreateHomeworkForm = ({ show, courseOfferingId, onClose, onSave }: CreateHomeworkFormProps) => {
   const [homework, setHomework] = useState<Homework>({
     id: -1, // id doesn't matter since it won't be used during creation
     hw_name: "",
@@ -24,7 +24,15 @@ const CreateHomeworkForm = ({ show, courseOfferingId, onClose, onCreateHomework 
       ...prevState, // shallow copy entire previous state
       [name]: value // update specific key/value
     }));
-  }
+  };
+
+
+  const handleCreateHomework = async (homework: Homework) => {
+    // make POST request
+    console.log("create homework:");
+    console.log(homework);
+  };
+
 
   return (
     <Modal
@@ -50,8 +58,8 @@ const CreateHomeworkForm = ({ show, courseOfferingId, onClose, onCreateHomework 
           className="mx-2" 
           variant="primary" 
           onClick={() => {
-            onCreateHomework(homework);
-            onClose();
+            handleCreateHomework(homework);
+            onSave();
           }}>
           Create Homework
         </Button>

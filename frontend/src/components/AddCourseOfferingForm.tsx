@@ -10,10 +10,10 @@ interface AddOfferingFormProps {
   show: boolean;
   courses: Course[];
   onClose: () => void;
-  onAddOffering: (offering: CourseOffering) => void;
+  onSave: () => void;
 }
 
-const AddCourseOfferingForm = ({ show, courses, onClose, onAddOffering }: AddOfferingFormProps) => {
+const AddCourseOfferingForm = ({ show, courses, onClose, onSave }: AddOfferingFormProps) => {
   const date = new Date();
   let currentSem: "Spring" | "Summer" | "Fall" | "Winter";
   if (date.getMonth() < 4) {
@@ -40,7 +40,15 @@ const AddCourseOfferingForm = ({ show, courses, onClose, onAddOffering }: AddOff
       ...prevState,
       [name]: value
     }));
-  }
+  };
+
+
+  const handleAddOffering = async (offering: CourseOffering) => {
+    // make POST request
+    console.log(`add offering:`);
+    console.log(offering);
+  };
+
 
   return (
     <Modal
@@ -89,8 +97,8 @@ const AddCourseOfferingForm = ({ show, courses, onClose, onAddOffering }: AddOff
           className="mx-2" 
           variant="primary" 
           onClick={() => {
-            onAddOffering(offering);
-            onClose();
+            handleAddOffering(offering);
+            onSave();
           }}
         >
           Add Course Offering

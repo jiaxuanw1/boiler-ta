@@ -19,49 +19,25 @@ const CoursesPage = () => {
   const [showCreateCourse, setShowCreateCourse] = useState(false);
   const handleShowCreateCourse = () => setShowCreateCourse(true);
   const handleCloseCreateCourse = () => setShowCreateCourse(false);
-
-  const handleCreateCourse = async (course: Course) => {
-    // make POST request
-    console.log(`create course:`);
-    console.log(course);
-
+  const handleSaveCourse = () => {
+    setShowCreateCourse(false);
     onDataUpdate();
-  };
+  }
 
+  /* move this inside Edit Course form */
   const handleDeleteCourse = async (course_id: number) => {
     // make DELETE request
     console.log(`delete coure: ${course_id}`);
-
-    onDataUpdate();
   };
 
 
   const [showAddOffering, setShowAddOffering] = useState(false);
   const handleShowAddOffering = () => setShowAddOffering(true);
   const handleCloseAddOffering = () => setShowAddOffering(false);
-
-  const handleAddOffering = async (offering: CourseOffering) => {
-    // make POST request
-    console.log(`add offering:`);
-    console.log(offering);
-
+  const handleSaveOffering = () => {
+    setShowAddOffering(false);
     onDataUpdate();
-  };
-
-  const handleUpdateOffering = async (updatedOffering: CourseOffering) => {
-    // make PUT request
-    console.log(`update offering:`);
-    console.log(updatedOffering);
-
-    onDataUpdate();
-  };
-
-  const handleDeleteOffering = async (offering_id: number) => {
-    // make DELETE request
-    console.log(`delete offering: ${offering_id}`);
-
-    onDataUpdate();
-  };
+  }
 
 
   const fetchCoursesAndOfferings = async () => {
@@ -110,6 +86,7 @@ const CoursesPage = () => {
 
   useEffect(() => {
     fetchCoursesAndOfferings();
+    console.log("fetchCoursesAndOfferings");
   }, [dataUpdateTrigger]);
 
 
@@ -122,7 +99,7 @@ const CoursesPage = () => {
       <CreateCourseForm
         show={showCreateCourse}
         onClose={handleCloseCreateCourse}
-        onCreateCourse={handleCreateCourse}
+        onSave={handleSaveCourse}
       />
 
       <Button className="m-2" variant="secondary" onClick={handleShowAddOffering}>
@@ -132,7 +109,7 @@ const CoursesPage = () => {
         show={showAddOffering}
         courses={courses}
         onClose={handleCloseAddOffering}
-        onAddOffering={handleAddOffering}
+        onSave={handleSaveOffering}
       />
       
       {courses.map(course => (
@@ -141,8 +118,7 @@ const CoursesPage = () => {
           <CourseListing
             course={course}
             offerings={offeringsByCourse[course.id]} 
-            onOfferingUpdate={handleUpdateOffering}
-            onOfferingDelete={handleDeleteOffering}
+            onSaveOffering={handleSaveOffering}
           />
         </div>
       ))}

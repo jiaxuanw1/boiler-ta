@@ -4,11 +4,10 @@ import { CourseOffering, FormControlElement } from '../types';
 
 interface EditCourseOfferingFormProps {
   offering: CourseOffering;
-  onUpdate: (updatedOffering: CourseOffering) => void;
-  onDelete: (id: number) => void;
+  onSave: () => void;
 }
 
-const EditCourseOfferingForm = ({ offering, onUpdate, onDelete }: EditCourseOfferingFormProps) => {
+const EditCourseOfferingForm = ({ offering, onSave }: EditCourseOfferingFormProps) => {
   const [offeringState, setOfferingState] = useState<CourseOffering>({
     id: offering.id,
     course: offering.course,
@@ -22,7 +21,20 @@ const EditCourseOfferingForm = ({ offering, onUpdate, onDelete }: EditCourseOffe
       ...prevState,
       [name]: value
     }));
-  }
+  };
+
+
+  const handleUpdateOffering = async (updatedOffering: CourseOffering) => {
+    // make PUT request
+    console.log(`update offering:`);
+    console.log(updatedOffering);
+  };
+
+  const handleDeleteOffering = async (offering_id: number) => {
+    // make DELETE request
+    console.log(`delete offering: ${offering_id}`);
+  };
+
   
   return (
     <Form>
@@ -47,7 +59,10 @@ const EditCourseOfferingForm = ({ offering, onUpdate, onDelete }: EditCourseOffe
       <Button 
         className="mx-2" 
         variant="primary"
-        onClick={() => onUpdate(offeringState)}
+        onClick={() => {
+          handleUpdateOffering(offeringState);
+          onSave();
+        }}
       >
         Save
       </Button>
@@ -55,7 +70,10 @@ const EditCourseOfferingForm = ({ offering, onUpdate, onDelete }: EditCourseOffe
       <Button 
         className="mx-2" 
         variant="danger" 
-        onClick={() => onDelete(offeringState.id)}
+        onClick={() => {
+          handleDeleteOffering(offeringState.id);
+          onSave();
+        }}
       >
         Delete
       </Button>

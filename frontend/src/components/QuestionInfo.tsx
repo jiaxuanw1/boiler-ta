@@ -4,11 +4,22 @@ import { Button, Card, ListGroup } from 'react-bootstrap';
 interface QuestionInfoProps {
   question: Question;
   taAssignments: TAAssignmentForHW[];
-  onUpdateQuestion: (updatedQuestion: Question) => void;
-  onDeleteQuestion: (questionId: number) => void;
+  onSaveQuestion: () => void;
 }
 
-const QuestionInfo = ({ question, taAssignments }: QuestionInfoProps) => {
+const QuestionInfo = ({ question, taAssignments, onSaveQuestion }: QuestionInfoProps) => {
+  /* move these inside Edit Question Form once i create that */
+  const handleUpdateQuestion = async (updatedQuestion: Question) => {
+    // make PUT request
+    console.log(`update question`);
+    console.log(updatedQuestion);
+  };
+  const handleDeleteQuestion = async (questionId: number) => {
+    // make DELETE request
+    console.log(`delete question: ${questionId}`);
+  };
+
+
   return (
     <Card className="mb-3">
       <Card.Header as="h5">{question.question_name}</Card.Header>
