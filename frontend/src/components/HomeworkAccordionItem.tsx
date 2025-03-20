@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Accordion, Button } from 'react-bootstrap';
-import { Homework, Question, TA, TAAssignmentForHW } from '../types';
+import { Homework, Question, TA, TAAssignmentForHW, TAForCourse } from '../types';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';
 import CreateQuestionForm from './CreateQuestionForm';
@@ -8,10 +8,11 @@ import QuestionInfo from './QuestionInfo';
 
 interface HomeworkAccordionItemProps {
   homework: Homework;
+  courseTAs: TAForCourse[];
   onSaveHomework: () => void;
 }
 
-const HomeworkAccordionItem = ({ homework, onSaveHomework }: HomeworkAccordionItemProps) => {
+const HomeworkAccordionItem = ({ homework, courseTAs, onSaveHomework }: HomeworkAccordionItemProps) => {
   const [dataUpdateTrigger, setDataUpdateTrigger] = useState(0);
   const onDataUpdate = () => setDataUpdateTrigger(prevValue => prevValue + 1);
 
@@ -53,6 +54,7 @@ const HomeworkAccordionItem = ({ homework, onSaveHomework }: HomeworkAccordionIt
   useEffect(() => {
     fetchQuestions(homework.id);
     fetchGradingAssignments(homework.id);
+    // console.log(`fetchGradingAssignments(${homework.id})`);
   }, [dataUpdateTrigger]);
 
 
@@ -82,6 +84,7 @@ const HomeworkAccordionItem = ({ homework, onSaveHomework }: HomeworkAccordionIt
         {questions.map(question => (
           <QuestionInfo key={`question-info-${question.id}`}
             question={question}
+            courseTAs={courseTAs}
             taAssignments={gradingAssignments.filter(assignment => assignment.question_id === question.id)}
             onSaveQuestion={handleSaveQuestion}
           />

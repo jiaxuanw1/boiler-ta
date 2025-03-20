@@ -60,6 +60,7 @@ export interface TAAssignmentForHW {
 
 export interface TAForCourse {
   id: number;
+  ta_id: number;
   ta_username: string;
   ta_first: string;
   ta_last: string;

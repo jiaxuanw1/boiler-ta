@@ -57,6 +57,7 @@ class TAAssignmentSerializer(serializers.ModelSerializer):
 
 
 class TAsForCourseSerializer(serializers.ModelSerializer):
+  ta_id = serializers.IntegerField(source="ta.id")
   ta_username = serializers.CharField(source="ta.username")
   ta_first = serializers.CharField(source="ta.first")
   ta_last = serializers.CharField(source="ta.last")
@@ -64,4 +65,4 @@ class TAsForCourseSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = TACourseRel
-    fields = ["id", "ta_username", "ta_first", "ta_last", "classification"]
+    fields = ["id", "ta_id", "ta_username", "ta_first", "ta_last", "classification"]

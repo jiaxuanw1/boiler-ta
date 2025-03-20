@@ -55,7 +55,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
   useEffect(() => {
     fetchHomeworks(offering.id);
     fetchTAs(offering.id);
-    console.log("fetch!");
+    // console.log("fetch!");
   }, [offering, dataUpdateTrigger]);
 
 
@@ -83,6 +83,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
             <HomeworkAccordionItem 
               key={`homework-${homework.id}`} 
               homework={homework} 
+              courseTAs={tas}
               onSaveHomework={handleSaveHomework}
             />
           ))}

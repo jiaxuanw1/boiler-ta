@@ -1,22 +1,22 @@
-import { Question, TAAssignmentForHW } from '../types';
+import { useEffect, useState } from 'react';
+import { Question, TA, TAAssignmentForHW, TAForCourse } from '../types';
 import { Button, Card, ListGroup } from 'react-bootstrap';
+import EditQuestionForm from './EditQuestionForm';
 
 interface QuestionInfoProps {
   question: Question;
   taAssignments: TAAssignmentForHW[];
+  courseTAs: TAForCourse[];
   onSaveQuestion: () => void;
 }
 
-const QuestionInfo = ({ question, taAssignments, onSaveQuestion }: QuestionInfoProps) => {
-  /* move these inside Edit Question Form once i create that */
-  const handleUpdateQuestion = async (updatedQuestion: Question) => {
-    // make PUT request
-    console.log(`update question`);
-    console.log(updatedQuestion);
-  };
-  const handleDeleteQuestion = async (questionId: number) => {
-    // make DELETE request
-    console.log(`delete question: ${questionId}`);
+const QuestionInfo = ({ question, taAssignments, courseTAs, onSaveQuestion }: QuestionInfoProps) => {
+  const [showEditQuestion, setShowEditQuestion] = useState(false);
+  const handleShowEditQuestion = () => setShowEditQuestion(true);
+  const handleCloseEditQuestion = () => setShowEditQuestion(false);
+  const handleSaveQuestion = () => {
+    setShowEditQuestion(false);
+    onSaveQuestion();
   };
 
 
@@ -34,7 +34,17 @@ const QuestionInfo = ({ question, taAssignments, onSaveQuestion }: QuestionInfoP
             ))}
         </ListGroup>
         
-        <Button variant="secondary">Edit Question</Button>
+        <Button variant="secondary" onClick={handleShowEditQuestion}>
+          Edit Question
+        </Button>
+        <EditQuestionForm 
+          show={showEditQuestion}
+          question={question}
+          questionTAs={taAssignments.map(assignment => assignment.ta_id)}
+          courseTAs={courseTAs}
+          onClose={handleCloseEditQuestion}
+          onSave={handleSaveQuestion}
+        />
       </Card.Body>
     </Card>
   );
