@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import viewsets, status
 from .models import Course, CourseOffering, TA, TACourseRel, Homework, Question, GradingRel
 from .serializers import (
   CourseSerializer,
@@ -8,7 +10,8 @@ from .serializers import (
   TACourseRelSerializer,
   HomeworkSerializer,
   HWQuestionSerializer,
-  GradingRelSerializer
+  GradingRelSerializer,
+  TAAssignmentSerializer
 )
 
 # Create your views here.
@@ -50,3 +53,18 @@ class QuestionViewSet(viewsets.ModelViewSet):
 class GradingRelViewSet(viewsets.ModelViewSet):
   queryset = GradingRel.objects.all()
   serializer_class = GradingRelSerializer
+
+
+class TAAssignmentsForHomeworkView(APIView):
+  def get(self, request, hw_id):
+    try:
+      # Filter and perform join
+      ta_assignments = GradingRel.objects.filter(
+        question__hw_id=hw_id
+      ).select_related("ta", "question")
+      
+      # Serialize results
+      serializer = TAAssignmentSerializer(ta_assignments, many=True)
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+      return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

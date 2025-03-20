@@ -48,5 +48,16 @@ export interface GradingRel {
   question: number; // foreign key to Question
 }
 
+
+export interface TAAssignmentForHW {
+  id: number;
+  question_id: number;
+  ta_id: number;
+  ta_username: string;
+  ta_first: string;
+  ta_last: string;
+}
+
+
 // For convenience when typing ChangeEvent for different form fields
 export type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;

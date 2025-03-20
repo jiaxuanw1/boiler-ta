@@ -42,3 +42,15 @@ class GradingRelSerializer(serializers.ModelSerializer):
   class Meta:
     model = GradingRel
     fields = "__all__"
+
+
+class TAAssignmentSerializer(serializers.ModelSerializer):
+  question_id = serializers.IntegerField(source="question.id")
+  ta_id = serializers.IntegerField(source="ta.id")
+  ta_username = serializers.CharField(source="ta.username")
+  ta_first = serializers.CharField(source="ta.first")
+  ta_last = serializers.CharField(source="ta.last")
+
+  class Meta:
+    model = GradingRel
+    fields = ["id", "question_id", "ta_id", "ta_username", "ta_first", "ta_last"]

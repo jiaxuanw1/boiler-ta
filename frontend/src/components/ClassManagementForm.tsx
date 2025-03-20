@@ -100,6 +100,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
           Create Assignment
         </Button>
         <CreateHomeworkForm 
+          key={`create-hw-form-${offering.id}`}
           show={showCreateHomework}
           courseOfferingId={offering.id}
           onClose={handleCloseCreateHomework}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Accordion, Button } from 'react-bootstrap';
-import { Homework, Question } from '../types';
+import { Homework, Question, TA, TAAssignmentForHW } from '../types';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';
 import CreateQuestionForm from './CreateQuestionForm';
+import QuestionInfo from './QuestionInfo';
 
 interface HomeworkAccordionItemProps {
   homework: Homework;
@@ -19,6 +20,8 @@ const HomeworkAccordionItem = ({
   onCreateQuestion, onUpdateQuestion, onDeleteQuestion
 }: HomeworkAccordionItemProps) => {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [gradingAssignments, setGradingAssignments] = useState<TAAssignmentForHW[]>([]);
+  
 
   const fetchQuestions = async (homeworkId: number) => {
     axios.get(`${API_BASE_URL}/api/questions/?hw=${homeworkId}`)
@@ -31,8 +34,20 @@ const HomeworkAccordionItem = ({
       });
   };
 
+  const fetchGradingAssignments = async (homeworkId: number) => {
+    axios.get(`${API_BASE_URL}/api/homework/${homeworkId}/tas/`)
+      .then(response => {
+        const taAssignmentList: TAAssignmentForHW[] = response.data;
+        setGradingAssignments(taAssignmentList);
+      })
+      .catch(error => {
+        console.error("Error fetching grading TAs:", error);
+      });
+  };
+
   useEffect(() => {
     fetchQuestions(homework.id);
+    fetchGradingAssignments(homework.id);
   }, []); // need to re-fetch on update? maybe pass in dataUpdateTrigger to all of these
 
 
@@ -54,8 +69,8 @@ const HomeworkAccordionItem = ({
       </Accordion.Header>
 
       <Accordion.Body>
-        <Button variant="primary" onClick={handleShowCreateQuestion}>
-          Create Question
+        <Button className="mb-3" variant="primary" onClick={handleShowCreateQuestion}>
+          Add Question
         </Button>
         <CreateQuestionForm
           show={showCreateQuestion}
@@ -65,7 +80,12 @@ const HomeworkAccordionItem = ({
         />
 
         {questions.map(question => (
-          <div></div>
+          <QuestionInfo key={`question-info-${question.id}`}
+            question={question}
+            taAssignments={gradingAssignments.filter(assignment => assignment.question_id === question.id)}
+            onUpdateQuestion={onUpdateQuestion}
+            onDeleteQuestion={onDeleteQuestion}
+          />
         ))}
       </Accordion.Body>
     </Accordion.Item>
