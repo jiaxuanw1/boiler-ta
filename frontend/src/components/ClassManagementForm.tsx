@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Course, CourseOffering, Homework, Question } from '../types';
-import { Accordion, Button } from 'react-bootstrap';
+import { Course, CourseOffering, Homework, Question, TAForCourse } from '../types';
+import { Accordion, Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';
 import HomeworkAccordionItem from './HomeworkAccordionItem';
@@ -70,7 +70,6 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
 
   
   const [homeworks, setHomeworks] = useState<Homework[]>([]);
-
   const fetchHomeworks = async (courseOfferingId: number) => {
     axios.get(`${API_BASE_URL}/api/homeworks/?course_offering=${courseOfferingId}`)
       .then(response => {
@@ -82,9 +81,24 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
       });
   };
 
-  // Re-fetch homeworks whenever selected course offering changes
+
+  const [tas, setTAs] = useState<TAForCourse[]>([]);
+  const fetchTAs = async (courseOfferingId: number) => {
+    axios.get(`${API_BASE_URL}/api/course-offering/${courseOfferingId}/tas/`)
+      .then(response => {
+        const taList: TAForCourse[] = response.data;
+        setTAs(taList);
+      })
+      .catch(error => {
+        console.error("Error fetching TAs:", error)
+      });
+  };
+
+  
+  // Re-fetch homeworks and TAs whenever selected course offering changes
   useEffect(() => {
     fetchHomeworks(offering.id);
+    fetchTAs(offering.id);
   }, [offering]);
 
 
@@ -120,6 +134,17 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
             />
           ))}
         </Accordion>
+      </div>
+
+      <div>
+        <h3 className="mb-3">TAs</h3>
+        <ListGroup className="mb-3">
+          {tas.map(taOffering => (
+            <ListGroup.Item key={`ta-offering-${taOffering.id}`}>
+              {`${taOffering.ta_first} ${taOffering.ta_last}`}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
       </div>
     </>
   );

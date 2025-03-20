@@ -53,7 +53,7 @@ const HomeworkAccordionItem = ({
 
   const [showCreateQuestion, setShowCreateQuestion] = useState(false);
   const handleShowCreateQuestion = () => setShowCreateQuestion(true);
-  const closeCreateQuestion = () => setShowCreateQuestion(false);
+  const handleCloseCreateQuestion = () => setShowCreateQuestion(false);
 
 
   return (
@@ -75,7 +75,7 @@ const HomeworkAccordionItem = ({
         <CreateQuestionForm
           show={showCreateQuestion}
           homeworkId={homework.id}
-          onClose={closeCreateQuestion}
+          onClose={handleCloseCreateQuestion}
           onCreateQuestion={(onCreateQuestion)}
         />
 

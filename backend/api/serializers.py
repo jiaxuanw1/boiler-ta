@@ -54,3 +54,14 @@ class TAAssignmentSerializer(serializers.ModelSerializer):
   class Meta:
     model = GradingRel
     fields = ["id", "question_id", "ta_id", "ta_username", "ta_first", "ta_last"]
+
+
+class TAsForCourseSerializer(serializers.ModelSerializer):
+  ta_username = serializers.CharField(source="ta.username")
+  ta_first = serializers.CharField(source="ta.first")
+  ta_last = serializers.CharField(source="ta.last")
+  classification = serializers.CharField(source="get_classification_display") # human-readable choice
+
+  class Meta:
+    model = TACourseRel
+    fields = ["id", "ta_username", "ta_first", "ta_last", "classification"]

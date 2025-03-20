@@ -58,6 +58,14 @@ export interface TAAssignmentForHW {
   ta_last: string;
 }
 
+export interface TAForCourse {
+  id: number;
+  ta_username: string;
+  ta_first: string;
+  ta_last: string;
+  classification: string;
+}
+
 
 // For convenience when typing ChangeEvent for different form fields
 export type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;

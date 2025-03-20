@@ -11,7 +11,8 @@ from .serializers import (
   HomeworkSerializer,
   HWQuestionSerializer,
   GradingRelSerializer,
-  TAAssignmentSerializer
+  TAAssignmentSerializer,
+  TAsForCourseSerializer
 )
 
 # Create your views here.
@@ -65,6 +66,19 @@ class TAAssignmentsForHomeworkView(APIView):
       
       # Serialize results
       serializer = TAAssignmentSerializer(ta_assignments, many=True)
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+      return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class TAsForCourseView(APIView):
+  def get(self, request, offering_id):
+    try:
+      # Filter and join
+      tas_for_course = TACourseRel.objects.filter(course_offering_id=offering_id).select_related("ta")
+
+      # Serialize results
+      serializer = TAsForCourseSerializer(tas_for_course, many=True)
       return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
       return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
