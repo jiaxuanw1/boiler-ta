@@ -1,87 +1,93 @@
-import React, { useEffect, useState } from 'react';
-import { Course, CourseOffering, FormControlElement } from '../types';
+import { useEffect, useState } from 'react';
+import { Course, CourseOffering } from '../types';
 import { API_BASE_URL } from '../api';
 import axios from 'axios';
 import { Col, Form, Row } from 'react-bootstrap';
-
-interface CourseSelection {
-  course_id: number;
-  offering_id: number;
-}
+import ClassManagementForm from '../components/ClassManagementForm';
 
 const ClassManagementPage = () => {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [offeringsByCourse, setOfferingsByCourse] = useState<{ [key: number]: CourseOffering[] }>({});
+  const [offerings, setOfferings] = useState<CourseOffering[]>([]);
 
-  const fetchCoursesAndOfferings = async () => {
-    // Fetch courses and offerings from Django API in parallel
-    axios.all([
-      axios.get(`${API_BASE_URL}/api/courses/`),
-      axios.get(`${API_BASE_URL}/api/course-offerings/`)
-    ])
-    .then(axios.spread((coursesResponse, offeringsReponse) => {
-      const courseList: Course[] = coursesResponse.data;
-      const offeringList: CourseOffering[] = offeringsReponse.data;
 
-      // Sort courses lexicographically
-      courseList.sort((a, b) => {
-        const nameA = `${a.dept} ${a.number}`;
-        const nameB = `${b.dept} ${b.number}`;
-        return nameA.localeCompare(nameB);
+  const fetchCourses = async () => {
+    axios.get(`${API_BASE_URL}/api/courses/`)
+      .then(response => {
+        const courseList: Course[] = response.data;
+
+        // Sort courses lexicographically
+        courseList.sort((a, b) => {
+          const nameA = `${a.dept} ${a.number}`;
+          const nameB = `${b.dept} ${b.number}`;
+          return nameA.localeCompare(nameB);
+        });
+
+        setCourses(courseList);
+      })
+      .catch(error => {
+        console.error("Error fetching courses:", error);
       });
-      setCourses(courseList);
-
-      // Sort offerings starting with most recent
-      offeringList.sort((a, b) => {
-        const semesterOrder = {
-          Spring: 0,
-          Summer: 1,
-          Fall: 2,
-          Winter: 3
-        };
-
-        if (a.year != b.year) {
-          return b.year - a.year;
-        }
-        return semesterOrder[b.semester] - semesterOrder[a.semester];
-      });
-
-      // Group course offerings by course ID
-      const grouped: { [key: number]: CourseOffering[] } = {};
-      courseList.forEach(course => grouped[course.id] = []);
-      offeringList.forEach(offering => grouped[offering.course].push(offering));
-      setOfferingsByCourse(grouped);
-    }))
-    .catch(error => {
-      console.error("Error fetching courses and/or offerings:", error);
-    });
   };
 
-  // Fetch courses and offerings on initial render
+  const fetchOfferings = async (courseId: number) => {
+    axios.get(`${API_BASE_URL}/api/course-offerings/?course=${courseId}`)
+      .then(response => {
+        const offeringList: CourseOffering[] = response.data;
+
+        // Sort offerings starting with most recent
+        offeringList.sort((a, b) => {
+          const semesterOrder = {
+            Spring: 0,
+            Summer: 1,
+            Fall: 2,
+            Winter: 3
+          };
+
+          if (a.year != b.year) {
+            return b.year - a.year;
+          }
+          return semesterOrder[b.semester] - semesterOrder[a.semester];
+        });
+
+        setOfferings(offeringList);
+      })
+      .catch(error => {
+        console.error("Error fetching offerings:", error);
+      });
+  };
+
+  // Fetch courses on initial render
   useEffect(() => {
-    fetchCoursesAndOfferings();
+    fetchCourses();
   }, []);
 
 
-  const [courseSelection, setCourseSelection] = useState<CourseSelection>({
-    course_id: -1,
-    offering_id: -1
-  });
-  const handleCourseSelectChange = (event: React.ChangeEvent<FormControlElement>) => {
-    const { name, value } = event.currentTarget;
-    setCourseSelection(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  }
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedOffering, setSelectedOffering] = useState<CourseOffering | null>(null);
+
+  // Fetch offerings whenever course selection changes
+  useEffect(() => {
+    if (selectedCourse) {
+      fetchOfferings(selectedCourse.id);
+    } else {
+      setOfferings([]);
+    }
+  }, [selectedCourse]);
 
   return (
     <>
-      <Form>
-        <Row className="mb-3">
+      <Form className="mb-4">
+        <Row>
           <Form.Group as={Col}>
             <Form.Label>Course</Form.Label>
-            <Form.Select name="course_id" onChange={handleCourseSelectChange}>
+            <Form.Select 
+              name="course_id" 
+              onChange={(event) => {
+                const course = courses.find(c => c.id === Number(event.currentTarget.value));
+                setSelectedCourse(course || null);
+                setSelectedOffering(null);
+              }}
+            >
               <option value={-1}></option>
               {courses.map(course => (
                 <option key={`course-${course.id}`} value={course.id}>
@@ -93,11 +99,16 @@ const ClassManagementPage = () => {
 
           <Form.Group as={Col}>
             <Form.Label>Offering</Form.Label>
-            <Form.Select name="offering_id" onChange={handleCourseSelectChange}>
+            <Form.Select 
+              name="offering_id" 
+              onChange={(event) => {
+                const offering = offerings.find(o => o.id === Number(event.currentTarget.value));
+                setSelectedOffering(offering || null);
+              }}
+            >
               <option value={-1}></option>
               {
-                courseSelection.course_id in offeringsByCourse &&
-                offeringsByCourse[courseSelection.course_id].map(offering => (
+                offerings.map(offering => (
                   <option key={`offering-${offering.id}`} value={offering.id}>
                     {`${offering.semester} ${offering.year}`}
                   </option>
@@ -108,7 +119,11 @@ const ClassManagementPage = () => {
         </Row>
       </Form>
 
-      
+      {
+        // Generate Class Management interface if valid course and offering selected
+        selectedCourse && selectedOffering &&
+          <ClassManagementForm course={selectedCourse} offering={selectedOffering} />
+      }
     </>
   );
 }

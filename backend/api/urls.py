@@ -16,7 +16,7 @@ router.register(r"course-offerings", CourseOfferingViewSet)
 router.register(r"tas", TAViewSet)
 router.register(r"ta-courses", TACourseRelViewSet)
 router.register(r"homeworks", HomeworkViewSet)
-router.register(r"hw-questions", QuestionViewSet)
+router.register(r"questions", QuestionViewSet)
 router.register(r"grading-assignments", GradingRelViewSet)
 
 urlpatterns = [

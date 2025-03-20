@@ -63,16 +63,15 @@ const CoursesPage = () => {
   };
 
 
-
   const fetchCoursesAndOfferings = async () => {
     // Fetch courses and offerings from Django API in parallel
     axios.all([
       axios.get(`${API_BASE_URL}/api/courses/`),
       axios.get(`${API_BASE_URL}/api/course-offerings/`)
     ])
-    .then(axios.spread((coursesResponse, offeringsReponse) => {
+    .then(axios.spread((coursesResponse, offeringsResponse) => {
       const courseList: Course[] = coursesResponse.data;
-      const offeringList: CourseOffering[] = offeringsReponse.data;
+      const offeringList: CourseOffering[] = offeringsResponse.data;
 
       // Sort courses lexicographically
       courseList.sort((a, b) => {
