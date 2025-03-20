@@ -59,7 +59,14 @@ const CreateCourseForm = ({ show, onClose, onCreateCourse }: CreateCourseFormPro
       </Modal.Body>
 
       <Modal.Footer>
-        <Button className="mx-2" variant="primary" onClick={() => onCreateCourse(course)}>
+        <Button 
+          className="mx-2" 
+          variant="primary" 
+          onClick={() => {
+            onCreateCourse(course);
+            onClose();
+          }}
+        >
           Create Course
         </Button>
         <Button variant="secondary" onClick={onClose}>

@@ -19,13 +19,13 @@ const CoursesPage = () => {
   const [showCreateCourse, setShowCreateCourse] = useState(false);
   const handleShowCreateCourse = () => setShowCreateCourse(true);
   const handleCloseCreateCourse = () => setShowCreateCourse(false);
+
   const handleCreateCourse = async (course: Course) => {
     // make POST request
     console.log(`create course:`);
     console.log(course);
 
     onDataUpdate();
-    handleCloseCreateCourse();
   };
 
   const handleDeleteCourse = async (course_id: number) => {
@@ -35,16 +35,17 @@ const CoursesPage = () => {
     onDataUpdate();
   };
 
+
   const [showAddOffering, setShowAddOffering] = useState(false);
   const handleShowAddOffering = () => setShowAddOffering(true);
   const handleCloseAddOffering = () => setShowAddOffering(false);
+
   const handleAddOffering = async (offering: CourseOffering) => {
     // make POST request
     console.log(`add offering:`);
     console.log(offering);
 
     onDataUpdate();
-    handleCloseAddOffering();
   };
 
   const handleUpdateOffering = async (updatedOffering: CourseOffering) => {

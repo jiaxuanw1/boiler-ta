@@ -3,6 +3,7 @@ import { Accordion, Button } from 'react-bootstrap';
 import { Homework, Question } from '../types';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';
+import CreateQuestionForm from './CreateQuestionForm';
 
 interface HomeworkAccordionItemProps {
   homework: Homework;
@@ -53,6 +54,16 @@ const HomeworkAccordionItem = ({
       </Accordion.Header>
 
       <Accordion.Body>
+        <Button variant="primary" onClick={handleShowCreateQuestion}>
+          Create Question
+        </Button>
+        <CreateQuestionForm
+          show={showCreateQuestion}
+          homeworkId={homework.id}
+          onClose={closeCreateQuestion}
+          onCreateQuestion={(onCreateQuestion)}
+        />
+
         {questions.map(question => (
           <div></div>
         ))}

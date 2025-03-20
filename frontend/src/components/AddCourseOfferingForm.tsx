@@ -85,7 +85,14 @@ const AddCourseOfferingForm = ({ show, courses, onClose, onAddOffering }: AddOff
       </Modal.Body>
 
       <Modal.Footer>
-        <Button className="mx-2" variant="primary" onClick={() => onAddOffering(offering)}>
+        <Button 
+          className="mx-2" 
+          variant="primary" 
+          onClick={() => {
+            onAddOffering(offering);
+            onClose();
+          }}
+        >
           Add Course Offering
         </Button>
         <Button variant="secondary" onClick={onClose}>

@@ -33,7 +33,7 @@ const CreateHomeworkForm = ({ show, courseOfferingId, onClose, onCreateHomework 
       backdrop="static"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Create New Course</Modal.Title>
+        <Modal.Title>Create New Homework</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -46,7 +46,13 @@ const CreateHomeworkForm = ({ show, courseOfferingId, onClose, onCreateHomework 
       </Modal.Body>
 
       <Modal.Footer>
-        <Button className="mx-2" variant="primary" onClick={() => onCreateHomework(homework)}>
+        <Button 
+          className="mx-2" 
+          variant="primary" 
+          onClick={() => {
+            onCreateHomework(homework);
+            onClose();
+          }}>
           Create Homework
         </Button>
         <Button variant="secondary" onClick={onClose}>

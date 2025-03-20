@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<CoursesPage />} />
           <Route path="/courses" element={<CoursesPage />} />
-          <Route path="/class-management" element={<ClassManagementPage/>} />
+          <Route path="/class-management" element={<ClassManagementPage />} />
           {/* <Route path="/offering/:courseId" element={<OfferingManagementPage />} /> */}
           {/* <Route path="/tas" element={<TAsPage />} /> */}
           <Route path="*" element={<NotFoundPage />} />
