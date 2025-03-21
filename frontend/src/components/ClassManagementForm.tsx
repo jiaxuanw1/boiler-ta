@@ -5,6 +5,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../api';
 import HomeworkAccordionItem from './HomeworkAccordionItem';
 import CreateHomeworkForm from './CreateHomeworkForm';
+import SelectTAsForCourseForm from './SelectTAsForCourseForm';
 
 interface ClassManagementFormProps {
   course: Course
@@ -21,6 +22,14 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
   const handleCloseCreateHomework = () => setShowCreateHomework(false);
   const handleSaveHomework = () => {
     setShowCreateHomework(false);
+    onDataUpdate(); // re-fetch data
+  };
+
+  const [showSelectTAs, setShowSelectTAs] = useState(false);
+  const handleShowSelectTAs = () => setShowSelectTAs(true);
+  const handleCloseSelectTAs = () => setShowSelectTAs(false);
+  const handleSaveTAs = () => {
+    setShowSelectTAs(false);
     onDataUpdate(); // re-fetch data
   };
 
@@ -66,7 +75,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
       </div>
       <div>
         <h3 className="mb-3">Assignments</h3>
-        <Button variant="primary" onClick={handleShowCreateHomework}>
+        <Button variant="primary" className="mb-3" onClick={handleShowCreateHomework}>
           Create Assignment
         </Button>
         <CreateHomeworkForm 
@@ -77,7 +86,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
           onSave={handleSaveHomework}
         />
 
-        <Accordion className="m-3">
+        <Accordion className="mb-3">
           {homeworks.map(homework => (
             <HomeworkAccordionItem 
               key={`homework-${homework.id}`} 
@@ -91,6 +100,17 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
 
       <div>
         <h3 className="mb-3">TAs</h3>
+        <Button variant="primary" className="mb-3" onClick={handleShowSelectTAs}>
+          Select TAs
+        </Button>
+        <SelectTAsForCourseForm 
+          show={showSelectTAs}
+          courseOffering={offering}
+          courseTAs={tas}
+          onClose={handleCloseSelectTAs}
+          onSave={handleSaveTAs}
+        />
+
         <ListGroup className="mb-3">
           {tas.map(taOffering => (
             <ListGroup.Item key={`ta-offering-${taOffering.id}`}>
