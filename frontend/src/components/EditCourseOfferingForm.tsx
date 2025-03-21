@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { CourseOffering, FormControlElement } from '../types';
+import axios from 'axios';
+import { API_BASE_URL } from '../api';
 
 interface EditCourseOfferingFormProps {
   offering: CourseOffering;
@@ -21,14 +23,23 @@ const EditCourseOfferingForm = ({ offering, onSave }: EditCourseOfferingFormProp
 
 
   const handleUpdateOffering = async (updatedOffering: CourseOffering) => {
-    // make PUT request
-    console.log(`update offering:`);
-    console.log(updatedOffering);
+    try {
+      const response = await axios.put(`${API_BASE_URL}/api/course-offerings/${updatedOffering.id}/`, updatedOffering)
+      alert(`Course offering for ${updatedOffering.semester} ${updatedOffering.year} updated successfully!`);
+      console.log(response);
+    } catch (error) {
+      console.error("Error updating course offering:", error);
+    }
   };
 
   const handleDeleteOffering = async (offering_id: number) => {
-    // make DELETE request
-    console.log(`delete offering: ${offering_id}`);
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/api/course-offerings/${offering_id}/`)
+      alert(`Course offering deleted successfully!`);
+      console.log(response);
+    } catch (error) {
+      console.error("Error deleting course offering:", error);
+    }
   };
 
   
@@ -55,8 +66,8 @@ const EditCourseOfferingForm = ({ offering, onSave }: EditCourseOfferingFormProp
       <Button 
         className="mx-2" 
         variant="primary"
-        onClick={() => {
-          handleUpdateOffering(offeringState);
+        onClick={async () => {
+          await handleUpdateOffering(offeringState);
           onSave();
         }}
       >
@@ -66,8 +77,8 @@ const EditCourseOfferingForm = ({ offering, onSave }: EditCourseOfferingFormProp
       <Button 
         className="mx-2" 
         variant="danger" 
-        onClick={() => {
-          handleDeleteOffering(offeringState.id);
+        onClick={async () => {
+          await handleDeleteOffering(offeringState.id);
           onSave();
         }}
       >

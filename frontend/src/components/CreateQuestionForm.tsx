@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { FormControlElement, Question } from '../types';
 import { Col, Row } from 'react-bootstrap';
+import axios from 'axios';
+import { API_BASE_URL } from '../api';
 
 interface CreateQuestionFormProps {
   show: boolean;
@@ -33,9 +35,12 @@ const CreateQuestionForm = ({ show, homeworkId, onClose, onSave }: CreateQuestio
 
 
   const handleCreateQuestion = async (question: Question) => {
-    // make POST request
-    console.log("create question:");
-    console.log(question);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/questions/`, question);
+      console.log(response);
+    } catch (error) {
+      console.error("Error creating question:", error);
+    }
   };
 
 
@@ -75,8 +80,8 @@ const CreateQuestionForm = ({ show, homeworkId, onClose, onSave }: CreateQuestio
         <Button 
           className="mx-2" 
           variant="primary" 
-          onClick={() => {
-            handleCreateQuestion(question);
+          onClick={async () => {
+            await handleCreateQuestion(question);
             onSave();
           }}
         >

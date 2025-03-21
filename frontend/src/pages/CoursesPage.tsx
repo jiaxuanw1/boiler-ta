@@ -86,7 +86,6 @@ const CoursesPage = () => {
 
   useEffect(() => {
     fetchCoursesAndOfferings();
-    console.log("fetchCoursesAndOfferings");
   }, [dataUpdateTrigger]);
 
 
@@ -113,7 +112,7 @@ const CoursesPage = () => {
       />
       
       {courses.map(course => (
-        <div key={course.id} className="m-3">
+        <div key={`course-${course.id}`} className="m-3">
           <h3>{`${course.dept} ${course.number}: ${course.title}`}</h3>
           <CourseListing
             course={course}

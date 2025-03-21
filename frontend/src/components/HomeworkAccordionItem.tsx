@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Accordion, Button } from 'react-bootstrap';
-import { Homework, Question, TA, TAAssignmentForHW, TAForCourse } from '../types';
+import { Homework, Question, TAAssignmentForHW, TAForCourse } from '../types';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';
 import CreateQuestionForm from './CreateQuestionForm';
@@ -22,6 +22,15 @@ const HomeworkAccordionItem = ({ homework, courseTAs, onSaveHomework }: Homework
   const handleSaveQuestion = () => {
     setShowCreateQuestion(false);
     onDataUpdate();
+  };
+
+  const [showEditHomework, setShowEditHomework] = useState(false);
+  const handleShowEditHomework = () => setShowEditHomework(true);
+  const handleCloseEditHomework = () => setShowEditHomework(false);
+  const handleSaveHomework = () => {
+    setShowEditHomework(false);
+    onDataUpdate();
+    onSaveHomework();
   };
 
 
@@ -54,7 +63,6 @@ const HomeworkAccordionItem = ({ homework, courseTAs, onSaveHomework }: Homework
   useEffect(() => {
     fetchQuestions(homework.id);
     fetchGradingAssignments(homework.id);
-    // console.log(`fetchGradingAssignments(${homework.id})`);
   }, [dataUpdateTrigger]);
 
 
@@ -62,16 +70,10 @@ const HomeworkAccordionItem = ({ homework, courseTAs, onSaveHomework }: Homework
     <Accordion.Item eventKey={`homework-${homework.id}`}>
       <Accordion.Header>
         <span>{homework.hw_name}</span>
-        {/* <Button 
-          className="mx-4" 
-          variant="outline-secondary"
-        >
-          Edit
-        </Button> */}
       </Accordion.Header>
 
       <Accordion.Body>
-        <Button className="mb-3" variant="primary" onClick={handleShowCreateQuestion}>
+        <Button className="mb-3 mx-2" variant="primary" onClick={handleShowCreateQuestion}>
           Add Question
         </Button>
         <CreateQuestionForm
@@ -80,6 +82,11 @@ const HomeworkAccordionItem = ({ homework, courseTAs, onSaveHomework }: Homework
           onClose={handleCloseCreateQuestion}
           onSave={(handleSaveQuestion)}
         />
+
+        <Button className="mb-3 mx-2" variant="secondary" onClick={handleShowEditHomework}>
+          Edit Homework
+        </Button>
+        
 
         {questions.map(question => (
           <QuestionInfo key={`question-info-${question.id}`}

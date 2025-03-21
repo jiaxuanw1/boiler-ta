@@ -5,6 +5,8 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Course, CourseOffering, FormControlElement } from '../types';
+import { API_BASE_URL } from '../api';
+import axios from 'axios';
 
 interface AddOfferingFormProps {
   show: boolean;
@@ -44,9 +46,12 @@ const AddCourseOfferingForm = ({ show, courses, onClose, onSave }: AddOfferingFo
 
 
   const handleAddOffering = async (offering: CourseOffering) => {
-    // make POST request
-    console.log(`add offering:`);
-    console.log(offering);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/course-offerings/`, offering);
+      console.log(response);
+    } catch (error) {
+      console.error("Error creating course offering:", offering);
+    }
   };
 
 
@@ -96,8 +101,8 @@ const AddCourseOfferingForm = ({ show, courses, onClose, onSave }: AddOfferingFo
         <Button 
           className="mx-2" 
           variant="primary" 
-          onClick={() => {
-            handleAddOffering(offering);
+          onClick={async () => {
+            await handleAddOffering(offering);
             onSave();
           }}
         >

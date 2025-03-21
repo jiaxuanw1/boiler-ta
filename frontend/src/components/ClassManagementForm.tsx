@@ -55,7 +55,6 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
   useEffect(() => {
     fetchHomeworks(offering.id);
     fetchTAs(offering.id);
-    // console.log("fetch!");
   }, [offering, dataUpdateTrigger]);
 
 

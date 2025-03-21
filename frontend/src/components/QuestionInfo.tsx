@@ -40,7 +40,7 @@ const QuestionInfo = ({ question, taAssignments, courseTAs, onSaveQuestion }: Qu
         <EditQuestionForm 
           show={showEditQuestion}
           question={question}
-          questionTAs={taAssignments.map(assignment => assignment.ta_id)}
+          questionTAs={taAssignments}
           courseTAs={courseTAs}
           onClose={handleCloseEditQuestion}
           onSave={handleSaveQuestion}

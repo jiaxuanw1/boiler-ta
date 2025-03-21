@@ -5,6 +5,8 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Course, FormControlElement } from '../types';
+import { API_BASE_URL } from '../api';
+import axios from 'axios';
 
 interface CreateCourseFormProps {
   show: boolean;
@@ -13,7 +15,7 @@ interface CreateCourseFormProps {
 }
 
 const CreateCourseForm = ({ show, onClose, onSave }: CreateCourseFormProps) => {
-  const [course, setCourse] = useState<Course>({
+  const [courseState, setCourseState] = useState<Course>({
     id: -1, // id doesn't matter since it won't be used during creation
     dept: "",
     number: "",
@@ -22,7 +24,7 @@ const CreateCourseForm = ({ show, onClose, onSave }: CreateCourseFormProps) => {
 
   const handleChange = (event: React.ChangeEvent<FormControlElement>) => {
     const { name, value } = event.currentTarget;
-    setCourse(prevState => ({
+    setCourseState(prevState => ({
       ...prevState, // shallow copy entire previous state
       [name]: value // update specific key/value
     }));
@@ -30,17 +32,17 @@ const CreateCourseForm = ({ show, onClose, onSave }: CreateCourseFormProps) => {
 
 
   const handleCreateCourse = async (course: Course) => {
-    // make POST request
-    console.log(`create course:`);
-    console.log(course);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/courses/`, course);
+      console.log(response);
+    } catch (error) {
+      console.error("Error creating course:", error);
+    }
   };
 
 
   return (
-    <Modal
-      show={show}
-      onHide={onClose}
-      backdrop="static"
+    <Modal show={show} onHide={onClose} backdrop="static"
     >
       <Modal.Header closeButton>
         <Modal.Title>Create New Course</Modal.Title>
@@ -51,17 +53,17 @@ const CreateCourseForm = ({ show, onClose, onSave }: CreateCourseFormProps) => {
           <Row className="mb-3">
             <Form.Group as={Col}>
               <Form.Label>Department</Form.Label>
-              <Form.Control name="dept" type="text" value={course.dept} onChange={handleChange} />
+              <Form.Control name="dept" type="text" value={courseState.dept} onChange={handleChange} />
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Number</Form.Label>
-              <Form.Control name="number" type="text" value={course.number} onChange={handleChange} />
+              <Form.Control name="number" type="text" value={courseState.number} onChange={handleChange} />
             </Form.Group>
           </Row>
 
           <Form.Group className="mb-3">
             <Form.Label>Course Title</Form.Label>
-            <Form.Control name="title" type="text" value={course.title} onChange={handleChange} />
+            <Form.Control name="title" type="text" value={courseState.title} onChange={handleChange} />
           </Form.Group>
         </Form>
       </Modal.Body>
@@ -70,8 +72,8 @@ const CreateCourseForm = ({ show, onClose, onSave }: CreateCourseFormProps) => {
         <Button 
           className="mx-2" 
           variant="primary" 
-          onClick={() => {
-            handleCreateCourse(course);
+          onClick={async () => {
+            await handleCreateCourse(courseState);
             onSave();
           }}
         >

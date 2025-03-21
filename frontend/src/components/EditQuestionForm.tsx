@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { FormControlElement, Question, TA, TAForCourse } from '../types';
+import { FormControlElement, GradingRel, Question, TA, TAAssignmentForHW, TAForCourse } from '../types';
 import { Button, Col, Form, ListGroup, Modal, Row } from 'react-bootstrap';
+import axios from 'axios';
+import { API_BASE_URL } from '../api';
 
 interface EditQuestionFormProps {
   show: boolean;
   question: Question;
-  questionTAs: number[];
+  questionTAs: TAAssignmentForHW[];
   courseTAs: TAForCourse[];
   onClose: () => void;
   onSave: () => void;
@@ -18,7 +20,7 @@ const EditQuestionForm = ({ show, question, questionTAs, courseTAs, onClose, onS
 
   // Initialize selected TAs to current TAs assigned to question
   useEffect(() => {
-    setSelectedTAs([...questionTAs]);
+    setSelectedTAs(questionTAs.map(assignment => assignment.ta_id));
   }, [question]);
 
   const handleFormChange = (event: React.ChangeEvent<FormControlElement>) => {
@@ -37,36 +39,85 @@ const EditQuestionForm = ({ show, question, questionTAs, courseTAs, onClose, onS
     );
   };
 
-  useEffect(() => {
-    console.log(`selectedTAs for ${question.question_name} with ID ${question.id}:`);
-    console.log(selectedTAs);
-  }, [selectedTAs]);
+  // useEffect(() => {
+  //   console.log(`selectedTAs for ${question.question_name} with ID ${question.id}:`);
+  //   console.log(selectedTAs);
+  // }, [selectedTAs]);
 
-  const handleFormSubmit = () => {
-    console.log("submitted form:");
-    console.log(questionState);
-    console.log(selectedTAs);
+  const handleFormSubmit = async () => {
+    if (selectedTAs.length < questionState.required_tas) {
+      alert(`Must select at least ${questionState.required_tas} TAs!`);
+      return;
+    }
+
+    await handleUpdateQuestion(questionState);
+    await handleUpdateAllGrading();
+
+    // Signal parent of changes
+    onSave();
   };
-
 
 
   const handleUpdateQuestion = async (updatedQuestion: Question) => {
-    // make PUT request
-    console.log(`update question`);
-    console.log(updatedQuestion);
+    try {
+      const response = await axios.put(`${API_BASE_URL}/api/questions/${updatedQuestion.id}/`, updatedQuestion)
+      console.log(response);
+    } catch (error) {
+      console.error("Error updating question:", error);
+    }
   };
 
   const handleDeleteQuestion = async (questionId: number) => {
-    // make DELETE request
-    console.log(`delete question: ${questionId}`);
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/api/questions/${questionId}/`)
+      console.log(response);
+    } catch (error) {
+      console.error("Error deleting question:", error);
+    }
+  };
+
+  const handleCreateGradingAssignment = async (gradingRel: GradingRel) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/grading-assignments/`, gradingRel);
+      console.log(response);
+    } catch (error) {
+      console.error("Error creating (TA, Question) assignment:", error);
+    }
+  };
+
+  const handleDeleteGradingAssignment = async (gradingRelId: number) => {
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/api/grading-assignments/${gradingRelId}/`);
+      console.log(response);
+    } catch (error) {
+      console.error("Error deleting (TA, Question) assignment:", error);
+    }
+  };
+
+  const handleUpdateAllGrading = async () => {
+    const prevAssigned = new Set<number>(questionTAs.map(assignment => assignment.ta_id));
+    for (const taId of selectedTAs) {
+      if (!prevAssigned.has(taId)) {
+        // Selected TA that was previously not on this question
+        await handleCreateGradingAssignment({
+          id: -1,
+          ta: taId,
+          question: question.id
+        });
+      }
+    }
+
+    const selected = new Set<number>(selectedTAs);
+    for (const gradingAssignment of questionTAs) {
+      if (!selected.has(gradingAssignment.ta_id)) {
+        // Un-selected TA that was originally on this question
+        await handleDeleteGradingAssignment(gradingAssignment.id);
+      }
+    }
   };
 
   return (
-    <Modal
-      show={show}
-      onClose={onClose}
-      backdrop="static"
-    >
+    <Modal show={show} onClose={onClose} backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>Edit Question</Modal.Title>
       </Modal.Header>
@@ -114,12 +165,21 @@ const EditQuestionForm = ({ show, question, questionTAs, courseTAs, onClose, onS
         <Button
           className="mx-2"
           variant="primary"
-          onClick={() => {
+          onClick={async () => {
             handleFormSubmit();
-            onSave();
           }}
         >
           Save
+        </Button>
+        <Button
+          className="mx-2"
+          variant="danger"
+          onClick={async () => {
+            await handleDeleteQuestion(question.id);
+            onSave();
+          }}
+        >
+          Delete
         </Button>
         <Button variant="secondary" onClick={onClose}>
           Cancel
