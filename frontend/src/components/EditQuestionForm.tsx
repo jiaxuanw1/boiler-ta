@@ -60,7 +60,7 @@ const EditQuestionForm = ({ show, question, questionTAs, courseTAs, onClose, onS
 
   const handleUpdateQuestion = async (updatedQuestion: Question) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/api/questions/${updatedQuestion.id}/`, updatedQuestion)
+      const response = await axios.put(`${API_BASE_URL}/api/questions/${updatedQuestion.id}/`, updatedQuestion);
       console.log(response);
     } catch (error) {
       console.error("Error updating question:", error);

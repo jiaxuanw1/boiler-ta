@@ -12,7 +12,6 @@ interface EditCourseOfferingFormProps {
 const EditCourseOfferingForm = ({ offering, onSave }: EditCourseOfferingFormProps) => {
   // Synced with form fields
   const [offeringState, setOfferingState] = useState<CourseOffering>({...offering});
-
   const handleChange = (event: React.ChangeEvent<FormControlElement>) => {
     const { name, value } = event.currentTarget;
     setOfferingState(prevState => ({

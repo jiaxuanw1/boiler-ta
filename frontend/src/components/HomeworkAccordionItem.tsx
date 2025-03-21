@@ -5,6 +5,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../api';
 import CreateQuestionForm from './CreateQuestionForm';
 import QuestionInfo from './QuestionInfo';
+import EditHomeworkForm from './EditHomeworkForm';
 
 interface HomeworkAccordionItemProps {
   homework: Homework;
@@ -32,6 +33,10 @@ const HomeworkAccordionItem = ({ homework, courseTAs, onSaveHomework }: Homework
     onDataUpdate();
     onSaveHomework();
   };
+  const handleDeleteHomework = () => {
+    setShowEditHomework(false);
+    onSaveHomework();
+  }
 
 
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -86,7 +91,13 @@ const HomeworkAccordionItem = ({ homework, courseTAs, onSaveHomework }: Homework
         <Button className="mb-3 mx-2" variant="secondary" onClick={handleShowEditHomework}>
           Edit Homework
         </Button>
-        
+        <EditHomeworkForm 
+          show={showEditHomework}
+          homework={homework}
+          onClose={handleCloseEditHomework}
+          onSave={handleSaveHomework}
+          onDelete={handleDeleteHomework}
+        />
 
         {questions.map(question => (
           <QuestionInfo key={`question-info-${question.id}`}
