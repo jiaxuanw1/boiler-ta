@@ -9,7 +9,6 @@ const ClassManagementPage = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [offerings, setOfferings] = useState<CourseOffering[]>([]);
 
-
   const fetchCourses = async () => {
     axios.get(`${API_BASE_URL}/api/courses/`)
       .then(response => {

@@ -8,8 +8,8 @@ import ClassManagementPage from './pages/ClassManagementPage';
 function App() {
   return (
     <>
-      <Navigation />
       <BrowserRouter>
+        <Navigation />
         <Routes>
           <Route path="/" element={<CoursesPage />} />
           <Route path="/courses" element={<CoursesPage />} />
