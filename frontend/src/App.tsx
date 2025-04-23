@@ -4,6 +4,8 @@ import CoursesPage from './pages/CoursesPage';
 import Navigation from './components/Navigation';
 import NotFoundPage from './pages/NotFoundPage';
 import ClassManagementPage from './pages/ClassManagementPage';
+import TAsPage from './pages/TAsPage';
+import ClassReportsPage from './pages/ClassReportsPage';
 
 function App() {
   return (
@@ -15,7 +17,8 @@ function App() {
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/class-management" element={<ClassManagementPage />} />
           {/* <Route path="/offering/:courseId" element={<OfferingManagementPage />} /> */}
-          {/* <Route path="/tas" element={<TAsPage />} /> */}
+          <Route path="/class-reports" element={<ClassReportsPage />} />
+          <Route path="/tas" element={<TAsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>

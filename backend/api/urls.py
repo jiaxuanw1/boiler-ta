@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
+  CourseOfferingTAStats,
   CourseViewSet,
   CourseOfferingViewSet,
   TAViewSet,
@@ -25,4 +26,5 @@ urlpatterns = [
   path("", include(router.urls)),
   path("homework/<int:hw_id>/tas/", TAAssignmentsForHomeworkView.as_view(), name="ta-assignments"),
   path("course-offering/<int:offering_id>/tas/", TAsForCourseView.as_view(), name="tas-for-course"),
+  path("course-offering/<int:offering_id>/ta-stats/", CourseOfferingTAStats.as_view(), name="course-ta-stats"),
 ]

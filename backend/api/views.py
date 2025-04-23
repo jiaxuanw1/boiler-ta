@@ -1,3 +1,4 @@
+from django.db import connection
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -80,5 +81,40 @@ class TAsForCourseView(APIView):
       # Serialize results
       serializer = TAsForCourseSerializer(tas_for_course, many=True)
       return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+      return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CourseOfferingTAStats(APIView):
+  def get(self, request, offering_id):
+    try:
+      with connection.cursor() as cursor:
+        query = """
+          SELECT 
+            t.username AS username, 
+            t.first AS first, 
+            t.last AS last, 
+            COALESCE(SUM(difficulty), 0) AS total_difficulty,
+            COALESCE(AVG(difficulty), 0) AS avg_difficulty,
+            COUNT(question_id) AS assignment_count
+          FROM api_CourseOffering co
+            JOIN api_TACourseRel tcrel ON co.id = tcrel.course_offering_id
+            JOIN api_TA t ON tcrel.ta_id = t.id
+            LEFT OUTER JOIN (
+                SELECT ta_id, difficulty, question_id
+                FROM api_GradingRel grel
+                  JOIN api_Question q ON grel.question_id = q.id
+                  JOIN api_Homework h ON q.hw_id = h.id
+                WHERE h.course_offering_id = %s
+            ) g ON t.id = g.ta_id
+          WHERE tcrel.course_offering_id = %s
+          GROUP BY t.id, t.username, t.first, t.last
+          ORDER BY total_difficulty DESC;
+        """
+        cursor.execute(query, [offering_id, offering_id])
+        columns = [col[0] for col in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+      return Response(results, status=status.HTTP_200_OK)
     except Exception as e:
       return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

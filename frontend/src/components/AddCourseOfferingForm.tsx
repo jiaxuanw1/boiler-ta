@@ -62,7 +62,7 @@ const AddCourseOfferingForm = ({ show, courses, onClose, onSave }: AddOfferingFo
       backdrop="static"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Create New Course</Modal.Title>
+        <Modal.Title>Add Course Offering</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

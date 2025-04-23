@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Question, TA, TAAssignmentForHW, TAForCourse } from '../types';
+import { useState } from 'react';
+import { Question, TAAssignmentForHW, TAForCourse } from '../types';
 import { Button, Card, ListGroup } from 'react-bootstrap';
 import EditQuestionForm from './EditQuestionForm';
 

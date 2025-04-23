@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormControlElement, GradingRel, Question, TA, TAAssignmentForHW, TAForCourse } from '../types';
+import { FormControlElement, GradingRel, Question, TAAssignmentForHW, TAForCourse } from '../types';
 import { Button, Col, Form, ListGroup, Modal, Row } from 'react-bootstrap';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';

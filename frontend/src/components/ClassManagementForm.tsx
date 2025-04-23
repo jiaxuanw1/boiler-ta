@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Course, CourseOffering, Homework, Question, TAForCourse } from '../types';
+import { Course, CourseOffering, Homework, TAForCourse } from '../types';
 import { Accordion, Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';

@@ -24,7 +24,6 @@ const EditCourseOfferingForm = ({ offering, onSave }: EditCourseOfferingFormProp
   const handleUpdateOffering = async (updatedOffering: CourseOffering) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/api/course-offerings/${updatedOffering.id}/`, updatedOffering)
-      alert(`Course offering for ${updatedOffering.semester} ${updatedOffering.year} updated successfully!`);
       console.log(response);
     } catch (error) {
       console.error("Error updating course offering:", error);
@@ -34,7 +33,6 @@ const EditCourseOfferingForm = ({ offering, onSave }: EditCourseOfferingFormProp
   const handleDeleteOffering = async (offering_id: number) => {
     try {
       const response = await axios.delete(`${API_BASE_URL}/api/course-offerings/${offering_id}/`)
-      alert(`Course offering deleted successfully!`);
       console.log(response);
     } catch (error) {
       console.error("Error deleting course offering:", error);

@@ -67,6 +67,15 @@ export interface TAForCourse {
   classification: string;
 }
 
+export interface TAStat {
+  username: string;
+  first: string;
+  last: string;
+  total_difficulty: number;
+  avg_difficulty: number;
+  assignment_count: number;
+}
+
 
 // For convenience when typing ChangeEvent for different form fields
 export type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
