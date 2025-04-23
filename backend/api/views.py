@@ -97,14 +97,14 @@ class CourseOfferingTAStats(APIView):
             COALESCE(SUM(difficulty), 0) AS total_difficulty,
             COALESCE(AVG(difficulty), 0) AS avg_difficulty,
             COUNT(question_id) AS assignment_count
-          FROM api_CourseOffering co
-            JOIN api_TACourseRel tcrel ON co.id = tcrel.course_offering_id
-            JOIN api_TA t ON tcrel.ta_id = t.id
+          FROM api_courseoffering co
+            JOIN api_tacourserel tcrel ON co.id = tcrel.course_offering_id
+            JOIN api_ta t ON tcrel.ta_id = t.id
             LEFT OUTER JOIN (
                 SELECT ta_id, difficulty, question_id
-                FROM api_GradingRel grel
-                  JOIN api_Question q ON grel.question_id = q.id
-                  JOIN api_Homework h ON q.hw_id = h.id
+                FROM api_gradingrel grel
+                  JOIN api_question q ON grel.question_id = q.id
+                  JOIN api_homework h ON q.hw_id = h.id
                 WHERE h.course_offering_id = %s
             ) g ON t.id = g.ta_id
           WHERE tcrel.course_offering_id = %s

@@ -100,7 +100,7 @@ const SelectTAsForCourseForm = ({ show, courseOffering, courseTAs, onClose, onSa
               <Form.Check
                 type="checkbox"
                 id={`ta-checkbox-${ta.id}`}
-                label={`${ta.first} ${ta.last} (${ta.username})`}
+                label={`${ta.last}, ${ta.first} (${ta.username})`}
                 checked={selectedTAs.includes(ta.id)}
                 onChange={() => handleTASelectionChange(ta.id)}
               />

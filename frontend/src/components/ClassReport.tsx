@@ -38,8 +38,7 @@ const ClassReport = ({ course, offering }: ClassReportProps) => {
         <thead>
           <tr>
             <th>Username</th>
-            <th>Last Name</th>
-            <th>First Name</th>
+            <th>Name</th>
             <th>Assignment Count</th>
             <th>Average Difficulty</th>
             <th>Total Difficulty</th>
@@ -49,8 +48,7 @@ const ClassReport = ({ course, offering }: ClassReportProps) => {
           {taStats.map(stat => (
             <tr key={`ta-stat-${stat.username}`}>
               <td>{stat.username}</td>
-              <td>{stat.last}</td>
-              <td>{stat.first}</td>
+              <td>{`${stat.last}, ${stat.first}`}</td>
               <td>{stat.assignment_count}</td>
               <td>{stat.avg_difficulty}</td>
               <td>{stat.total_difficulty}</td>

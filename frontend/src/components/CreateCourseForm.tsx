@@ -37,6 +37,7 @@ const CreateCourseForm = ({ show, onClose, onSave }: CreateCourseFormProps) => {
       console.log(response);
     } catch (error) {
       console.error("Error creating course:", error);
+      alert(`Error creating course ${course.dept} ${course.number}: ${course.title}!`);
     }
   };
 

@@ -51,6 +51,7 @@ const AddCourseOfferingForm = ({ show, courses, onClose, onSave }: AddOfferingFo
       console.log(response);
     } catch (error) {
       console.error("Error creating course offering:", offering);
+      alert(`Error creating course offering for ${offering.semester} ${offering.year}!`);
     }
   };
 

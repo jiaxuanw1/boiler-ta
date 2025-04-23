@@ -114,7 +114,7 @@ const ClassManagementForm = ({ course, offering }: ClassManagementFormProps) => 
         <ListGroup className="mb-3">
           {tas.map(taOffering => (
             <ListGroup.Item key={`ta-offering-${taOffering.id}`}>
-              {`${taOffering.ta_first} ${taOffering.ta_last}`}
+              {`${taOffering.ta_last}, ${taOffering.ta_first}`}
             </ListGroup.Item>
           ))}
         </ListGroup>
