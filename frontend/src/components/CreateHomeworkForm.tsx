@@ -35,6 +35,7 @@ const CreateHomeworkForm = ({ show, courseOfferingId, onClose, onSave }: CreateH
       console.log(response);
     } catch (error) {
       console.error("Error creating homework:", error);
+      alert(`Error creating homework: ${homework.hw_name}!`)
     }
   };
 

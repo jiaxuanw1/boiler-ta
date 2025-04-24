@@ -25,10 +25,10 @@ const CoursesPage = () => {
   }
 
   /* move this inside Edit Course form */
-  const handleDeleteCourse = async (course_id: number) => {
-    // make DELETE request
-    console.log(`delete coure: ${course_id}`);
-  };
+  // const handleDeleteCourse = async (course_id: number) => {
+  //   // make DELETE request
+  //   console.log(`delete coure: ${course_id}`);
+  // };
 
 
   const [showAddOffering, setShowAddOffering] = useState(false);
@@ -113,7 +113,6 @@ const CoursesPage = () => {
       
       {courses.map(course => (
         <div key={`course-${course.id}`} className="m-3">
-          <h3>{`${course.dept} ${course.number}: ${course.title}`}</h3>
           <CourseListing
             course={course}
             offerings={offeringsByCourse[course.id]} 

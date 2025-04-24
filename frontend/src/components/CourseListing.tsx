@@ -10,24 +10,28 @@ interface CourseListingProps {
 
 const CourseListing = ({ course, offerings, onSaveOffering }: CourseListingProps) => {
   return (
-    <Accordion>
-      {offerings.map(offering => (
-        <Accordion.Item key={`offering-${offering.id}`} eventKey={`offering-${offering.id}`}>
+    <>
+      <h3>{`${course.dept} ${course.number}: ${course.title}`}</h3>
+      <Accordion>
+        {offerings.map(offering => (
+          <Accordion.Item key={`offering-${offering.id}`} eventKey={`offering-${offering.id}`}>
 
-          <Accordion.Header>
-            {`${offering.semester} ${offering.year}`}
-          </Accordion.Header>
-          
-          <Accordion.Body>
-            <EditCourseOfferingForm 
-              offering={offering}
-              onSave={onSaveOffering}
-            />
-          </Accordion.Body>
+            <Accordion.Header>
+              {`${offering.semester} ${offering.year}`}
+            </Accordion.Header>
+            
+            <Accordion.Body>
+              <EditCourseOfferingForm 
+                offering={offering}
+                onSave={onSaveOffering}
+              />
+            </Accordion.Body>
 
-        </Accordion.Item>
-      ))}
-    </Accordion>
+          </Accordion.Item>
+        ))}
+      </Accordion>
+    </>
+
   )
 }
 
