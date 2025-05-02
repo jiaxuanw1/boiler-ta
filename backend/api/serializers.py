@@ -66,3 +66,10 @@ class TAsForCourseSerializer(serializers.ModelSerializer):
   class Meta:
     model = TACourseRel
     fields = ["id", "ta_id", "ta_username", "ta_first", "ta_last", "classification"]
+
+
+class QuestionTAAssignmentBulkUpdateSerializer(serializers.Serializer):
+  question_id = serializers.IntegerField()
+  ta_ids = serializers.ListField(
+    child=serializers.IntegerField()
+  )

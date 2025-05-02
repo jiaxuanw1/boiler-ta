@@ -86,26 +86,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
+        
         'NAME': 'defaultdb',
         'HOST': 'mysql-boiler-ta-boiler-ta.b.aivencloud.com',
         'PORT': 16138,
         'USER': 'jmoney',
         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-    }
-    # 'default': {
-    #     'ENGINE': 'mysql.connector.django',
+
     #     'NAME': 'boiler_ta',
     #     'HOST': '127.0.0.1',
     #     'PORT': 3306,
     #     'USER': 'root',
     #     'PASSWORD': 'jmoney',
 
-        # 'OPTIONS': {
-        #   'autocommit': True,
-        #   'use_oure': True,
-        #   'init_command': "SET foo='bar';"
-        # },
-    # }
+        'OPTIONS': {
+          'isolation_level': 'REPEATABLE READ',
+        },
+    }
 }
 
 

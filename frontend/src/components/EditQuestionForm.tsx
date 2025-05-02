@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormControlElement, GradingRel, Question, TAAssignmentForHW, TAForCourse } from '../types';
+import { FormControlElement, Question, TAAssignmentForHW, TAForCourse } from '../types';
 import { Button, Col, Form, ListGroup, Modal, Row } from 'react-bootstrap';
 import axios from 'axios';
 import { API_BASE_URL } from '../api';
@@ -76,43 +76,16 @@ const EditQuestionForm = ({ show, question, questionTAs, courseTAs, onClose, onS
     }
   };
 
-  const handleCreateGradingAssignment = async (gradingRel: GradingRel) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/grading-assignments/`, gradingRel);
-      console.log(response);
-    } catch (error) {
-      console.error("Error creating (TA, Question) assignment:", error);
-    }
-  };
-
-  const handleDeleteGradingAssignment = async (gradingRelId: number) => {
-    try {
-      const response = await axios.delete(`${API_BASE_URL}/api/grading-assignments/${gradingRelId}/`);
-      console.log(response);
-    } catch (error) {
-      console.error("Error deleting (TA, Question) assignment:", error);
-    }
-  };
-
   const handleUpdateAllGrading = async () => {
-    const prevAssigned = new Set<number>(questionTAs.map(assignment => assignment.ta_id));
-    for (const taId of selectedTAs) {
-      if (!prevAssigned.has(taId)) {
-        // Selected TA that was previously not on this question
-        await handleCreateGradingAssignment({
-          id: -1,
-          ta: taId,
-          question: question.id
-        });
-      }
-    }
-
-    const selected = new Set<number>(selectedTAs);
-    for (const gradingAssignment of questionTAs) {
-      if (!selected.has(gradingAssignment.ta_id)) {
-        // Un-selected TA that was originally on this question
-        await handleDeleteGradingAssignment(gradingAssignment.id);
-      }
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/questions/${question.id}/update_ta_assignments/`,
+        { ta_ids: selectedTAs }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error updating TA assignments:", error);
+      alert("Failed to update TA assignments. Please try again.");
     }
   };
 

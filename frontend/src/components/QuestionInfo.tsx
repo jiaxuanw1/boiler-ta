@@ -29,7 +29,7 @@ const QuestionInfo = ({ question, taAssignments, courseTAs, onSaveQuestion }: Qu
         <ListGroup className="mb-3">
           {taAssignments.map(assignment => (
               <ListGroup.Item key={`ta-assignment-${assignment.id}`}>
-                {`${assignment.ta_first} ${assignment.ta_last}`}
+                {`${assignment.ta_last}, ${assignment.ta_first}`}
               </ListGroup.Item>
             ))}
         </ListGroup>

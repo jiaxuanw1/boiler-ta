@@ -1,7 +1,8 @@
-from django.db import connection
+from django.db import connection, transaction
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from .models import Course, CourseOffering, TA, TACourseRel, Homework, Question, GradingRel
 from .serializers import (
@@ -13,7 +14,8 @@ from .serializers import (
   HWQuestionSerializer,
   GradingRelSerializer,
   TAAssignmentSerializer,
-  TAsForCourseSerializer
+  TAsForCourseSerializer,
+  QuestionTAAssignmentBulkUpdateSerializer
 )
 
 # Create your views here.
@@ -50,6 +52,47 @@ class QuestionViewSet(viewsets.ModelViewSet):
   queryset = Question.objects.all()
   serializer_class = HWQuestionSerializer
   filterset_fields = ["hw"]
+
+  @action(detail=True, methods=['post'])
+  def update_ta_assignments(self, request, pk=None):
+    question = self.get_object()
+    serializer = QuestionTAAssignmentBulkUpdateSerializer(data={
+      'question_id': question.id,
+      'ta_ids': request.data.get('ta_ids', [])
+    })
+        
+    if not serializer.is_valid():
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    try:
+      with transaction.atomic():
+        # Get current assignments
+        current_assignments = set(
+          GradingRel.objects.filter(question=question)
+          .values_list('ta_id', flat=True)
+        )
+        new_assignments = set(serializer.validated_data['ta_ids'])
+                
+        # Add new assignments
+        to_add = new_assignments - current_assignments
+        for ta_id in to_add:
+          GradingRel.objects.create(ta_id=ta_id, question=question)
+                
+        # Remove old assignments
+        to_remove = current_assignments - new_assignments
+        if to_remove:
+          GradingRel.objects.filter(
+            question=question,
+            ta_id__in=to_remove
+          ).delete()
+                
+        if (len(new_assignments) < question.required_tas):
+          raise Exception("TA assignments don't meet requirements for this question")
+                
+        return Response(status=status.HTTP_200_OK)
+            
+    except Exception as e:
+      return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GradingRelViewSet(viewsets.ModelViewSet):
