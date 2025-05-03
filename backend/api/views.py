@@ -69,7 +69,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
         # Get current assignments
         current_assignments = set(
           GradingRel.objects.filter(question=question)
-          .values_list('ta_id', flat=True)
+            .values_list('ta_id', flat=True)
         )
         new_assignments = set(serializer.validated_data['ta_ids'])
                 

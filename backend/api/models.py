@@ -15,7 +15,7 @@ class Course(models.Model):
 
 
 class CourseOffering(models.Model):
-  course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="offerings")
+  course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="offerings", db_index=True)
   semester = models.CharField(max_length=6, choices=(
     ("Spring", "Spring"),
     ("Summer", "Summer"),
@@ -36,13 +36,19 @@ class TA(models.Model):
   first = models.CharField(max_length=50)
   last = models.CharField(max_length=50)
 
+  class Meta:
+    indexes = [
+      # Index for grouping in TA stats query
+      models.Index(fields=["id", "username", "first", "last"]),
+    ]
+
   def __str__(self):
     return self.username
 
 
 class TACourseRel(models.Model):
   ta = models.ForeignKey(TA, on_delete=models.CASCADE, related_name="ta_course_rels")
-  course_offering = models.ForeignKey(CourseOffering, on_delete=models.CASCADE, related_name="ta_course_rels")
+  course_offering = models.ForeignKey(CourseOffering, on_delete=models.CASCADE, related_name="ta_course_rels", db_index=True)
   classification = models.CharField(max_length=2, choices=(
     ("UG", "Undergraduate"),
     ("GR", "Graduate")
@@ -57,7 +63,7 @@ class TACourseRel(models.Model):
 
 class Homework(models.Model):
   hw_name = models.CharField(max_length=50)
-  course_offering = models.ForeignKey(CourseOffering, on_delete=models.CASCADE, related_name="homeworks")
+  course_offering = models.ForeignKey(CourseOffering, on_delete=models.CASCADE, related_name="homeworks", db_index=True)
 
   class Meta:
     unique_together = ("hw_name", "course_offering")
@@ -67,7 +73,7 @@ class Homework(models.Model):
 
 
 class Question(models.Model):
-  hw = models.ForeignKey(Homework, on_delete=models.CASCADE, related_name="questions")
+  hw = models.ForeignKey(Homework, on_delete=models.CASCADE, related_name="questions", db_index=True)
   question_name = models.CharField(max_length=50)
   difficulty = models.PositiveSmallIntegerField()
   required_tas = models.PositiveSmallIntegerField() # gta + uta + either
@@ -83,7 +89,7 @@ class Question(models.Model):
 
 class GradingRel(models.Model):
   ta = models.ForeignKey(TA, on_delete=models.CASCADE, related_name="grading")
-  question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="grading")
+  question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="grading", db_index=True)
 
   class Meta:
     unique_together = ("ta", "question")
